@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snaplt - macOS 창 관리 애플리케이션</title>
+    <style>
+        :root {
+            --primary-color: #2D7FF9;
+            --secondary-color: #F2F6FF;
+            --text-color: #333333;
+            --light-gray: #F5F5F7;
+            --dark-gray: #86868B;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: #FFFFFF;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 3rem auto;
+            text-align: center;
+        }
+        
+        .hero img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            background-color: #1A68E0;
+        }
+        
+        .version {
+            margin-top: 0.5rem;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+        
+        .features {
+            background-color: var(--light-gray);
+            padding: 4rem 0;
+        }
+        
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-item h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .feature-item h3 span {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .how-to-use {
+            padding: 4rem 0;
+        }
+        
+        .how-to-use h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+        }
+        
+        .step-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 2rem;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .shortcuts {
+            padding: 4rem 0;
+            background-color: var(--light-gray);
+        }
+        
+        .shortcuts h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+        }
+        
+        .shortcuts-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .shortcut-item {
+            padding: 0.5rem;
+        }
+        
+        .shortcut-item kbd {
+            background-color: #F8F8F8;
+            border: 1px solid #DDD;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            color: #333;
+            display: inline-block;
+            font-size: 0.85rem;
+            padding: 0.1rem 0.5rem;
+            margin: 0 0.2rem;
+        }
+        
+        .faq {
+            padding: 4rem 0;
+        }
+        
+        .faq h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #EEEEEE;
+            padding-bottom: 1.5rem;
+        }
+        
+        .faq-item h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        footer {
+            background-color: #333333;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        footer p {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .documentation-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .documentation-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 1rem;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>snaplt</h1>
+        <p>macOS 창 관리의 새로운 경험</p>
+    </header>
+    
+    <div class="hero">
+        <img src="https://placehold.co/800x500/2D7FF9/FFFFFF/png?text=snaplt" alt="snaplt 애플리케이션 스크린샷">
+        <h2>키보드 단축키로 완벽한 창 관리</h2>
+        <p>마우스 없이도 창을 정확히 원하는 위치로 배치하세요.</p>
+        <a href="snaplt.zip" class="download-btn">무료 다운로드</a>
+        <p class="version">최신 버전: 1.0.0 (macOS 11.0 이상 필요)</p>
+    </div>
+    
+    <section class="features">
+        <div class="container">
+            <h2>주요 기능</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3><span>🪟</span> 다양한 레이아웃</h3>
+                    <p>전체화면, 반분할, 1/4분할, 1/3분할, 2/3분할 등 다양한 레이아웃으로 창을 쉽게 배치할 수 있습니다.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span>⌨️</span> 키보드 단축키</h3>
+                    <p>모든 레이아웃에 사용자 지정 가능한 키보드 단축키를 설정하여 마우스 없이도 창을 관리할 수 있습니다.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span>🖥</span> 멀티 모니터 지원</h3>
+                    <p>여러 모니터를 사용하는 환경에서도 자동으로 현재 창이 있는 모니터를 감지하여 올바르게 레이아웃을 적용합니다.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span>🧭</span> 직관적인 메뉴바</h3>
+                    <p>메뉴바에서 클릭 한 번으로 원하는 레이아웃을 선택하고 적용할 수 있습니다.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span>⚙️</span> 사용자 설정</h3>
+                    <p>단축키와 자동 실행 옵션 등을 원하는 대로 설정할 수 있습니다.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span>🔄</span> 레이아웃 반복 적용</h3>
+                    <p>같은 레이아웃을 여러 창에 연속적으로 적용할 수 있는 반복 기능을 제공합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="how-to-use">
+        <div class="container">
+            <h2>사용 방법</h2>
+            <div class="step-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>설치하기</h3>
+                        <p>다운로드한 snaplt 앱 파일을 응용 프로그램 폴더로 이동하세요. 처음 실행할 때 macOS에서 접근성 권한을 요청합니다.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>접근성 권한 설정</h3>
+                        <p>"설정 열기" 버튼을 클릭하여 시스템 환경설정의 개인 정보 보호 및 보안 > 접근성으로 이동한 후, snaplt 앱에 권한을 부여하세요.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>메뉴바에서 사용하기</h3>
+                        <p>메뉴바에 나타난 snaplt 아이콘을 클릭하여 원하는 레이아웃을 선택하면 현재 활성화된 창에 적용됩니다.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>단축키 사용하기</h3>
+                        <p>미리 설정된 키보드 단축키를 사용하거나, 환경설정에서 원하는 대로 단축키를 변경할 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="manual.html" class="documentation-link">전체 사용 설명서 보기 →</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="shortcuts">
+        <div class="container">
+            <h2>기본 단축키</h2>
+            <div class="shortcuts-container">
+                <div class="shortcut-grid">
+                    <div class="shortcut-item">
+                        <p>전체화면: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>return</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>좌측 반분할: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>←</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>우측 반분할: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>→</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>상단 반분할: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>↑</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>하단 반분할: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>↓</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>좌상단 1/4: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>I</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>우상단 1/4: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>O</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>좌하단 1/4: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>K</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>우하단 1/4: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>L</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>좌측 1/3: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>Q</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>중앙 1/3: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>W</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>우측 1/3: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>E</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>좌측 2/3: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>→</kbd><kbd>→</kbd></p>
+                    </div>
+                    <div class="shortcut-item">
+                        <p>우측 2/3: <kbd>⌃</kbd><kbd>⌥</kbd><kbd>←</kbd><kbd>←</kbd></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="faq">
+        <div class="container">
+            <h2>자주 묻는 질문</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <h3>왜 접근성 권한이 필요한가요?</h3>
+                    <p>macOS에서 다른 앱의 창을 제어하려면 접근성 권한이 필요합니다. snaplt은 이 권한을 사용하여 현재 활성화된 창의 위치와 크기를 변경합니다.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>모든 앱에서 작동하나요?</h3>
+                    <p>대부분의 macOS 앱에서 정상적으로 작동합니다. 하지만 일부 특수한 앱(특히 전체 화면 모드의 앱)에서는 제한될 수 있습니다.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>단축키가 작동하지 않아요.</h3>
+                    <p>환경설정에서 전역 단축키가 활성화되어 있는지 확인하세요. 또한 다른 앱이 동일한 단축키를 사용하고 있을 수 있습니다.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>로그인 시 자동 실행은 어떻게 설정하나요?</h3>
+                    <p>환경설정의 일반 탭에서 "로그인 시 자동 실행" 옵션을 활성화하면 컴퓨터를 시작할 때마다 snaplt이 자동으로 실행됩니다.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>기타 문제가 있을 때는 어떻게 해야 하나요?</h3>
+                    <p>앱을 재시작하거나, 접근성 권한을 다시 확인해보세요. 계속 문제가 있다면 개발팀에 문의해주세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>© 2025 snaplt 개발팀. 모든 권리 보유.</p>
+        <p>macOS 11.0 이상에서 작동합니다.</p>
+        <a href="snaplt.zip" class="download-btn">무료 다운로드</a>
+    </footer>
+</body>
+</html> 
